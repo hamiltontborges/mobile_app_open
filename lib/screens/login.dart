@@ -39,6 +39,7 @@ class _LoginState extends State<Login> {
       style: TextStyle(
         color:  kColorWhite,
       ),
+      cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color:  kColorWhite, width: 1.0),
@@ -63,6 +64,7 @@ class _LoginState extends State<Login> {
         color:  kColorWhite,
       ),
       obscureText: true,
+      cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color:  kColorWhite, width: 1.0),

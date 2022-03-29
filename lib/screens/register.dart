@@ -10,13 +10,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
-
   Widget _buildTitle() {
     return Text(
       'Cadastrar',
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
         fontFamily: 'OpenSans',
         fontSize: 25.0,
         fontWeight: FontWeight.bold,
@@ -24,25 +22,25 @@ class _RegisterState extends State<Register> {
     );
   }
 
-    Widget _buildNameForm() {
+  Widget _buildNameForm() {
     return TextFormField(
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
       ),
+      cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
-        prefixIcon:
-            Icon(Icons.person_sharp, color:  kColorWhite),
-        prefixIconColor:  kColorWhite,
+        prefixIcon: Icon(Icons.person_sharp, color: kColorWhite),
+        prefixIconColor: kColorWhite,
         labelText: "Nome",
-        labelStyle: TextStyle(color:  kColorWhite, fontWeight: FontWeight.bold),
+        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite seu nome",
-        hintStyle: TextStyle(color:  kColorWhite),
+        hintStyle: TextStyle(color: kColorWhite),
       ),
     );
   }
@@ -50,22 +48,22 @@ class _RegisterState extends State<Register> {
   Widget _buildEmailForm() {
     return TextFormField(
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
       ),
+      cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
-        prefixIcon:
-            Icon(Icons.email, color:  kColorWhite),
-        prefixIconColor:  kColorWhite,
+        prefixIcon: Icon(Icons.email, color: kColorWhite),
+        prefixIconColor: kColorWhite,
         labelText: "Email",
-        labelStyle: TextStyle(color:  kColorWhite, fontWeight: FontWeight.bold),
+        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite seu email",
-        hintStyle: TextStyle(color:  kColorWhite),
+        hintStyle: TextStyle(color: kColorWhite),
       ),
     );
   }
@@ -73,23 +71,23 @@ class _RegisterState extends State<Register> {
   Widget _buildPasswordForm() {
     return TextFormField(
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
       ),
+      cursorColor: kColorWhite,
       obscureText: true,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
-        prefixIcon:
-            Icon(Icons.lock, color:  kColorWhite),
-        prefixIconColor:  kColorWhite,
+        prefixIcon: Icon(Icons.lock, color: kColorWhite),
+        prefixIconColor: kColorWhite,
         labelText: "Senha",
         labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite sua senha",
-        hintStyle: TextStyle(color:  kColorWhite),
+        hintStyle: TextStyle(color: kColorWhite),
       ),
     );
   }
@@ -112,8 +110,7 @@ class _RegisterState extends State<Register> {
           padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0))),
-          backgroundColor:
-              MaterialStateProperty.all(kColorYellow),
+          backgroundColor: MaterialStateProperty.all(kColorYellow),
         ),
       ),
     );
@@ -124,7 +121,7 @@ class _RegisterState extends State<Register> {
       children: <Widget>[
         Text(
           '- OU -',
-          style: TextStyle(color:  kColorWhite, fontWeight: FontWeight.w500),
+          style: TextStyle(color: kColorWhite, fontWeight: FontWeight.w500),
         ),
         SizedBox(
           height: 10.0,
@@ -145,7 +142,7 @@ class _RegisterState extends State<Register> {
           width: 60.0,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color:  Colors.white,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                   color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)
