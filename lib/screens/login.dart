@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => {},
+        onPressed: () => {Navigator.of(context).pushNamed('/home')},
         child: Text("ENTRAR",
             style: TextStyle(
                 color: kColorBlue,
