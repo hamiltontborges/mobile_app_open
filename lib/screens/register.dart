@@ -92,6 +92,30 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  Widget _buildConfirmPasswordForm() {
+    return TextFormField(
+      style: TextStyle(
+        color: kColorWhite,
+      ),
+      cursorColor: kColorWhite,
+      obscureText: true,
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
+        ),
+        prefixIcon: Icon(Icons.lock, color: kColorWhite),
+        prefixIconColor: kColorWhite,
+        labelText: "Confirmar senha",
+        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
+        hintText: "Digite navamente sua senha",
+        hintStyle: TextStyle(color: kColorWhite),
+      ),
+    );
+  }
+
   Widget _buildRegisterBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -228,12 +252,14 @@ class _RegisterState extends State<Register> {
                         _buildEmailForm(),
                         SizedBox(height: 20.0),
                         _buildPasswordForm(),
+                        SizedBox(height: 20.0),
+                        _buildConfirmPasswordForm(),
                         SizedBox(height: 10.0),
-                        // _buildPassword(),
                         _buildRegisterBtn(),
+                        _buildSignUp(),
+                        SizedBox(height: 10.0),
                         _buildEnterWith(),
                         _buildSocialBtnRow(),
-                        _buildSignUp(),
                       ]),
                     ),
                   ],

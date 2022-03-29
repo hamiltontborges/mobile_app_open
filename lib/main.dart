@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:mobile_app_open/screens/home.dart';
 import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/screens/register.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobile_app_open/services/auth_check.dart';
+import 'package:mobile_app_open/services/auth_service.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -12,7 +15,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => AuthService()),
+    ],
+    child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      home: AuthCheck(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => Login(),
         '/register': (BuildContext context) => Register(),
