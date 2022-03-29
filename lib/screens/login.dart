@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
             Icon(Icons.email, color:  kColorWhite),
         prefixIconColor:  kColorWhite,
         labelText: "Email",
-        labelStyle: TextStyle(color:  kColorWhite),
+        labelStyle: TextStyle(color:  kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite seu email",
         hintStyle: TextStyle(color:  kColorWhite),
       ),
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
             Icon(Icons.lock, color:  kColorWhite),
         prefixIconColor:  kColorWhite,
         labelText: "Senha",
-        labelStyle: TextStyle(color: kColorWhite),
+        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite sua senha",
         hintStyle: TextStyle(color:  kColorWhite),
       ),
@@ -178,7 +178,7 @@ class _LoginState extends State<Login> {
           width: 60.0,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color:  kColorWhite,
+            color:  Colors.white,
             boxShadow: [
               BoxShadow(
                   color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)
@@ -195,9 +195,9 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildSocialBtn(() => print('Entrou com o Facebook'),
-              AssetImage('assets/logos/facebook.jpg')),
+              AssetImage('assets/logos/facebook.png')),
           _buildSocialBtn(() => print('Entrou com o Google'),
-              AssetImage('assets/logos/google.jpg')),
+              AssetImage('assets/logos/google.png')),
         ],
       ),
     );
@@ -209,7 +209,7 @@ class _LoginState extends State<Login> {
 
   Widget _buildSignUp() {
     return GestureDetector(
-      onTap: () => {},
+      onTap: () => {Navigator.of(context).pushNamed('/register')},
       child: RichText(
           text: TextSpan(children: [
         TextSpan(

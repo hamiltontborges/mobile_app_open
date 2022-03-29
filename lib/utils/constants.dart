@@ -8,4 +8,4 @@ final kLabelStyle = TextStyle(
 
 const kColorBlue = Color.fromARGB(255, 29, 52, 104);
 const kColorYellow = Color.fromARGB(255, 233, 201, 21);
-const kColorWhite = Color.fromARGB(255, 223, 223, 223);
+const kColorWhite = Color.fromARGB(255, 240, 240, 240);
