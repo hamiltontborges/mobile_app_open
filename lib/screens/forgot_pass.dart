@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +15,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
 
@@ -23,14 +25,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return emailValid;
   }
 
-  Widget _buildTitle() {
-    return Text(
-      'Recuperar senha',
-      style: TextStyle(
-        color: kColorWhite,
-        fontFamily: 'OpenSans',
-        fontSize: 25.0,
-        fontWeight: FontWeight.bold,
+  @override
+  void dispose() {
+    email.dispose();
+
+    super.dispose();
+  }
+
+  Widget _buildLogo() {
+    return Container(
+      height: 100.0,
+      decoration: BoxDecoration(
+        image:
+            DecorationImage(image: AssetImage('assets/logos/open-unifeob.png')),
       ),
     );
   }
@@ -74,15 +81,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
- 
-
   Widget _buildResetBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text("Recuperar senha",
+      child: ElevatedButton.icon(
+        icon: Icon(Icons.send_outlined, color: kColorBlue),
+        label: Text("Recuperar senha",
             style: TextStyle(
                 color: kColorBlue,
                 letterSpacing: 1.5,
@@ -93,18 +98,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           elevation: MaterialStateProperty.all(5.0),
           padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0))),
+              borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(kColorYellow),
         ),
+        onPressed: () {
+          resetPassword();
+        },
       ),
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kColorDarkBlue,
+        title: Text('Recuperar senha'),
+        actions: <Widget>[
+          TextButton.icon(
+              icon: Icon(
+                Icons.login,
+                color: kColorYellow,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              label: Text(
+                'Entrar',
+                style: TextStyle(color: kColorYellow, fontSize: 16),
+              )),
+        ],
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -121,21 +145,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               height: double.infinity,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                padding:
-                    EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
+                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    _buildTitle(),
+                    SizedBox(height: 20.0),
+                    _buildLogo(),
+                    SizedBox(height: 20.0),
                     Form(
                       key: formKey,
                       child: Column(children: [
                         SizedBox(height: 30.0),
                         _buildEmailForm(),
-                        SizedBox(height: 20.0),
                         _buildResetBtn(),
                       ]),
                     ),
@@ -147,5 +168,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
+  }
+
+  Future resetPassword() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+              child: CircularProgressIndicator(),
+            ));
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: email.text.trim());
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Email de recuperação de senha enviado.")));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+      Navigator.of(context).pop();
+    }
   }
 }

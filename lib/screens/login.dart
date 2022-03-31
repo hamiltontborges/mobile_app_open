@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_app_open/screens/forgotPass.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile_app_open/screens/forgot_pass.dart';
 import 'package:mobile_app_open/screens/register.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
+import 'package:mobile_app_open/services/google_sign_in.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +23,6 @@ class _LoginState extends State<Login> {
   final email = TextEditingController();
   final password = TextEditingController();
 
-
   login() async {
     setState(() => loading == true);
     try {
@@ -35,25 +36,13 @@ class _LoginState extends State<Login> {
 
   Widget _buildLogo() {
     return Container(
-      height: 80.0,
+      height: 100.0,
       decoration: BoxDecoration(
         image:
             DecorationImage(image: AssetImage('assets/logos/open-unifeob.png')),
       ),
     );
   }
-
-  // Widget _buildTitle() {
-  //   return Text(
-  //     'Login',
-  //     style: TextStyle(
-  //       color: kColorWhite,
-  //       fontFamily: 'OpenSans',
-  //       fontSize: 25.0,
-  //       fontWeight: FontWeight.bold,
-  //     ),
-  //   );
-  // }
 
   Widget _buildEmailForm() {
     return TextFormField(
@@ -135,9 +124,11 @@ class _LoginState extends State<Login> {
     return Container(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () => {Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ForgotPassword()),
-                )
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ForgotPassword()),
+          )
         },
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
@@ -184,13 +175,17 @@ class _LoginState extends State<Login> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
         onPressed: () {
           if (formKey.currentState!.validate()) {
             login();
           }
         },
-        child: Text("ENTRAR",
+        icon: Icon(
+          Icons.login,
+          color: kColorBlue,
+        ),
+        label: Text("ENTRAR",
             style: TextStyle(
                 color: kColorBlue,
                 letterSpacing: 1.5,
@@ -201,7 +196,7 @@ class _LoginState extends State<Login> {
           elevation: MaterialStateProperty.all(5.0),
           padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0))),
+              borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(kColorYellow),
         ),
       ),
@@ -218,52 +213,41 @@ class _LoginState extends State<Login> {
         SizedBox(
           height: 10.0,
         ),
-        Text(
-          'Entrar com',
-          style: kLabelStyle,
-        )
       ],
     );
   }
 
-  Widget _buildSocialBtn(onTap, AssetImage logo) {
-    return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 60.0,
-          width: 60.0,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)
-            ],
-            image: DecorationImage(image: logo),
-          ),
-        ));
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(() => print('Entrou com o Facebook'),
-              AssetImage('assets/logos/facebook.png')),
-          _buildSocialBtn(() => print('Entrou com o Google'),
-              AssetImage('assets/logos/google.png')),
-        ],
+  Widget _buildSocialBtn() {
+    return ElevatedButton.icon(
+      icon: Image.asset('assets/logos/google.png', height: 30.0),
+      style: ElevatedButton.styleFrom(
+        primary: kColorWhite,
+        onPrimary: kColorBlue,
+        minimumSize: Size(double.infinity, 50),
+      ),
+      onPressed: () {
+        final provider =
+            Provider.of<GoogleSignInProvider>(context, listen: false);
+        provider.googleLogin();
+      },
+      label: Text(
+        'Entrar com Google',
+        style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
   Widget _buildSignUp() {
     return GestureDetector(
-      onTap: () => {Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Register()),
-                )},
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Register()),
+        )
+      },
       child: RichText(
           text: TextSpan(children: [
         TextSpan(
@@ -289,6 +273,22 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kColorDarkBlue,
+        title: Text('Login'),
+        actions: <Widget>[
+          TextButton.icon(
+            icon: Icon(Icons.person_add, color: kColorYellow,),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Register()));
+              },
+              label: Text(
+                'Cadastrar-se',
+                style: TextStyle(color: kColorYellow, fontSize: 16),
+              )),
+        ],
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -305,8 +305,7 @@ class _LoginState extends State<Login> {
               height: double.infinity,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                padding:
-                    EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
+                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -335,8 +334,13 @@ class _LoginState extends State<Login> {
                         ),
                         _buildEnterBtn(),
                         _buildEnterWith(),
-                        _buildSocialBtnRow(),
-                        _buildSignUp(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _buildSocialBtn(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
                       ]),
                     ),
                   ],

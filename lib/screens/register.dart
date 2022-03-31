@@ -37,6 +37,16 @@ class _RegisterState extends State<Register> {
     return emailValid;
   }
 
+  Widget _buildLogo() {
+    return Container(
+      height: 100.0,
+      decoration: BoxDecoration(
+        image:
+            DecorationImage(image: AssetImage('assets/logos/open-unifeob.png')),
+      ),
+    );
+  }
+
   Widget _buildTitle() {
     return Text(
       'Cadastrar',
@@ -158,13 +168,17 @@ class _RegisterState extends State<Register> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
         onPressed: () {
           if (formKey.currentState!.validate()) {
             register();
           }
         },
-        child: Text("CADASTRAR",
+        icon: Icon(
+          Icons.person_add,
+          color: kColorBlue,
+        ),
+        label: Text("CADASTRAR",
             style: TextStyle(
                 color: kColorBlue,
                 letterSpacing: 1.5,
@@ -175,7 +189,7 @@ class _RegisterState extends State<Register> {
           elevation: MaterialStateProperty.all(5.0),
           padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0))),
+              borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(kColorYellow),
         ),
       ),
@@ -192,43 +206,25 @@ class _RegisterState extends State<Register> {
         SizedBox(
           height: 10.0,
         ),
-        Text(
-          'Entrar com',
-          style: kLabelStyle,
-        )
       ],
     );
   }
 
-  Widget _buildSocialBtn(onTap, AssetImage logo) {
-    return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 60.0,
-          width: 60.0,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)
-            ],
-            image: DecorationImage(image: logo),
-          ),
-        ));
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(() => print('Entrou com o Facebook'),
-              AssetImage('assets/logos/facebook.png')),
-          _buildSocialBtn(() => print('Entrou com o Google'),
-              AssetImage('assets/logos/google.png')),
-        ],
+  Widget _buildSocialBtn() {
+    return ElevatedButton.icon(
+      icon: Image.asset('assets/logos/google.png', height: 30.0),
+      style: ElevatedButton.styleFrom(
+        primary: kColorWhite,
+        onPrimary: kColorBlue,
+        minimumSize: Size(double.infinity, 50),
+      ),
+      onPressed: () {},
+      label: Text(
+        'Entrar com Google',
+        style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -261,6 +257,21 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kColorDarkBlue,
+        title: Text('Cadastro'),
+        actions: <Widget>[
+          TextButton.icon(
+            icon: Icon(Icons.login, color: kColorYellow,),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              label: Text(
+                'Entrar',
+                style: TextStyle(color: kColorYellow, fontSize: 16),
+              )),
+        ],
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -278,14 +289,14 @@ class _RegisterState extends State<Register> {
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 padding:
-                    EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
+                    EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
                       height: 20.0,
                     ),
-                    _buildTitle(),
+                    _buildLogo(),
                     Form(
                       key: formKey,
                       child: Column(children: [
@@ -297,10 +308,12 @@ class _RegisterState extends State<Register> {
                         _buildConfirmPasswordForm(),
                         SizedBox(height: 10.0),
                         _buildRegisterBtn(),
-                        _buildSignUp(),
                         SizedBox(height: 10.0),
                         _buildEnterWith(),
-                        _buildSocialBtnRow(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _buildSocialBtn(),
                       ]),
                     ),
                   ],
