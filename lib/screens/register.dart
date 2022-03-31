@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -10,6 +12,31 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  bool? loading = false;
+
+  final formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+  register() async {
+    setState(() => loading == true);
+    try {
+      await context.read<AuthService>().registerUser(email.text, password.text);
+      Navigator.pop(context);
+    } on AuthException catch (e) {
+      setState(() => loading == false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
+  validateEmail(email) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    return emailValid;
+  }
+
   Widget _buildTitle() {
     return Text(
       'Cadastrar',
@@ -22,31 +49,10 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _buildNameForm() {
-    return TextFormField(
-      style: TextStyle(
-        color: kColorWhite,
-      ),
-      cursorColor: kColorWhite,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        prefixIcon: Icon(Icons.person_sharp, color: kColorWhite),
-        prefixIconColor: kColorWhite,
-        labelText: "Nome",
-        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
-        hintText: "Digite seu nome",
-        hintStyle: TextStyle(color: kColorWhite),
-      ),
-    );
-  }
-
   Widget _buildEmailForm() {
     return TextFormField(
+      controller: email,
+      keyboardType: TextInputType.emailAddress,
       style: TextStyle(
         color: kColorWhite,
       ),
@@ -57,6 +63,12 @@ class _RegisterState extends State<Register> {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: kColorWhite, width: 1.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
         ),
         prefixIcon: Icon(Icons.email, color: kColorWhite),
         prefixIconColor: kColorWhite,
@@ -65,11 +77,20 @@ class _RegisterState extends State<Register> {
         hintText: "Digite seu email",
         hintStyle: TextStyle(color: kColorWhite),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Informe o email corretamente';
+        } else if (!validateEmail(value)) {
+          return 'Email inválido';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildPasswordForm() {
     return TextFormField(
+      controller: password,
       style: TextStyle(
         color: kColorWhite,
       ),
@@ -82,6 +103,12 @@ class _RegisterState extends State<Register> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
         prefixIcon: Icon(Icons.lock, color: kColorWhite),
         prefixIconColor: kColorWhite,
         labelText: "Senha",
@@ -89,6 +116,14 @@ class _RegisterState extends State<Register> {
         hintText: "Digite sua senha",
         hintStyle: TextStyle(color: kColorWhite),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Informe sua senha';
+        } else if (value.length < 6) {
+          return 'Sua senha deve ter no mínimo 6 dígitos';
+        }
+        return null;
+      },
     );
   }
 
@@ -106,6 +141,9 @@ class _RegisterState extends State<Register> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
         prefixIcon: Icon(Icons.lock, color: kColorWhite),
         prefixIconColor: kColorWhite,
         labelText: "Confirmar senha",
@@ -121,7 +159,11 @@ class _RegisterState extends State<Register> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => {},
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            register();
+          }
+        },
         child: Text("CADASTRAR",
             style: TextStyle(
                 color: kColorBlue,
@@ -193,7 +235,7 @@ class _RegisterState extends State<Register> {
 
   Widget _buildSignUp() {
     return GestureDetector(
-      onTap: () => {Navigator.of(context).pushNamed('/login')},
+      onTap: () => {Navigator.pop(context)},
       child: RichText(
           text: TextSpan(children: [
         TextSpan(
@@ -245,10 +287,9 @@ class _RegisterState extends State<Register> {
                     ),
                     _buildTitle(),
                     Form(
+                      key: formKey,
                       child: Column(children: [
                         SizedBox(height: 30.0),
-                        _buildNameForm(),
-                        SizedBox(height: 20.0),
                         _buildEmailForm(),
                         SizedBox(height: 20.0),
                         _buildPasswordForm(),

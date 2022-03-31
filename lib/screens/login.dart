@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/screens/forgotPass.dart';
+import 'package:mobile_app_open/screens/register.dart';
+import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -11,6 +15,23 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool? _rememberMe = false;
+  bool? loading = false;
+
+  final formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+
+  login() async {
+    setState(() => loading == true);
+    try {
+      await context.read<AuthService>().loginUser(email.text, password.text);
+    } on AuthException catch (e) {
+      setState(() => loading == false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
 
   Widget _buildLogo() {
     return Container(
@@ -22,64 +43,91 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildTitle() {
-    return Text(
-      'Login',
-      style: TextStyle(
-        color:  kColorWhite,
-        fontFamily: 'OpenSans',
-        fontSize: 25.0,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
+  // Widget _buildTitle() {
+  //   return Text(
+  //     'Login',
+  //     style: TextStyle(
+  //       color: kColorWhite,
+  //       fontFamily: 'OpenSans',
+  //       fontSize: 25.0,
+  //       fontWeight: FontWeight.bold,
+  //     ),
+  //   );
+  // }
 
   Widget _buildEmailForm() {
     return TextFormField(
+      controller: email,
+      keyboardType: TextInputType.emailAddress,
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
       ),
       cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
-        prefixIcon:
-            Icon(Icons.email, color:  kColorWhite),
-        prefixIconColor:  kColorWhite,
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        prefixIcon: Icon(Icons.email, color: kColorWhite),
+        prefixIconColor: kColorWhite,
         labelText: "Email",
-        labelStyle: TextStyle(color:  kColorWhite, fontWeight: FontWeight.bold),
+        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite seu email",
-        hintStyle: TextStyle(color:  kColorWhite),
+        hintStyle: TextStyle(color: kColorWhite),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Informe um email válido';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildPasswordForm() {
     return TextFormField(
+      controller: password,
       style: TextStyle(
-        color:  kColorWhite,
+        color: kColorWhite,
       ),
       obscureText: true,
       cursorColor: kColorWhite,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:  kColorWhite, width: 1.0),
+          borderSide: BorderSide(color: kColorWhite, width: 1.0),
         ),
-        prefixIcon:
-            Icon(Icons.lock, color:  kColorWhite),
-        prefixIconColor:  kColorWhite,
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.0),
+        ),
+        prefixIcon: Icon(Icons.lock, color: kColorWhite),
+        prefixIconColor: kColorWhite,
         labelText: "Senha",
         labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
         hintText: "Digite sua senha",
-        hintStyle: TextStyle(color:  kColorWhite),
+        hintStyle: TextStyle(color: kColorWhite),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Informe sua senha';
+        } else if (value.length < 6) {
+          return 'Sua senha deve ter no mínimo 6 dígitos';
+        }
+        return null;
+      },
     );
   }
 
@@ -87,7 +135,10 @@ class _LoginState extends State<Login> {
     return Container(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () => print('Esqueci minha senha acionado'),
+        onPressed: () => {Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ForgotPassword()),
+                )
+        },
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
             EdgeInsets.only(right: 0.0),
@@ -107,7 +158,7 @@ class _LoginState extends State<Login> {
       child: Row(
         children: <Widget>[
           Theme(
-            data: ThemeData(unselectedWidgetColor:  kColorWhite),
+            data: ThemeData(unselectedWidgetColor: kColorWhite),
             child: Checkbox(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: _rememberMe,
@@ -134,7 +185,11 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => {Navigator.of(context).pushNamed('/home')},
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            login();
+          }
+        },
         child: Text("ENTRAR",
             style: TextStyle(
                 color: kColorBlue,
@@ -147,8 +202,7 @@ class _LoginState extends State<Login> {
           padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0))),
-          backgroundColor:
-              MaterialStateProperty.all(kColorYellow),
+          backgroundColor: MaterialStateProperty.all(kColorYellow),
         ),
       ),
     );
@@ -159,7 +213,7 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         Text(
           '- OU -',
-          style: TextStyle(color:  kColorWhite, fontWeight: FontWeight.w500),
+          style: TextStyle(color: kColorWhite, fontWeight: FontWeight.w500),
         ),
         SizedBox(
           height: 10.0,
@@ -180,7 +234,7 @@ class _LoginState extends State<Login> {
           width: 60.0,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color:  Colors.white,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                   color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)
@@ -205,13 +259,11 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildNull() {
-    return Container();
-  }
-
   Widget _buildSignUp() {
     return GestureDetector(
-      onTap: () => {Navigator.of(context).pushNamed('/register')},
+      onTap: () => {Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                )},
       child: RichText(
           text: TextSpan(children: [
         TextSpan(
@@ -262,8 +314,9 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    _buildTitle(),
+                    // _buildTitle(),
                     Form(
+                      key: formKey,
                       child: Column(children: [
                         SizedBox(height: 30.0),
                         _buildEmailForm(),
