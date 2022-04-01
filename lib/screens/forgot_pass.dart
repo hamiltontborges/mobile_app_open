@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
-import 'package:provider/provider.dart';
+import 'package:mobile_app_open/utils/logo.dart';
+import '../utils/login_var.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -32,44 +32,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     super.dispose();
   }
 
-  Widget _buildLogo() {
-    return Container(
-      height: 100.0,
-      decoration: BoxDecoration(
-        image:
-            DecorationImage(image: AssetImage('assets/logos/open-unifeob.png')),
-      ),
-    );
-  }
-
   Widget _buildEmailForm() {
     return TextFormField(
       controller: email,
       keyboardType: TextInputType.emailAddress,
-      style: TextStyle(
-        color: kColorWhite,
-      ),
+      style: kTextStyleWhite,
       cursorColor: kColorWhite,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        prefixIcon: Icon(Icons.email, color: kColorWhite),
-        prefixIconColor: kColorWhite,
-        labelText: "Email",
-        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
-        hintText: "Digite seu email",
-        hintStyle: TextStyle(color: kColorWhite),
-      ),
+      decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe o email corretamente';
@@ -86,24 +55,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton.icon(
-        icon: Icon(Icons.send_outlined, color: kColorBlue),
-        label: Text("Recuperar senha",
-            style: TextStyle(
-                color: kColorBlue,
-                letterSpacing: 1.5,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'OpenSans')),
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all(5.0),
-          padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0))),
-          backgroundColor: MaterialStateProperty.all(kColorYellow),
-        ),
         onPressed: () {
           resetPassword();
         },
+        icon: Icon(Icons.send_outlined, color: kColorBlue),
+        label: Text("Recuperar senha", style: kStyleTextButton),
+        style: kStyleButton,
       ),
     );
   }
@@ -150,7 +107,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: 20.0),
-                    _buildLogo(),
+                    logoOpen(100.0),
                     SizedBox(height: 20.0),
                     Form(
                       key: formKey,

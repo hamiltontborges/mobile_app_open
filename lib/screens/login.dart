@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile_app_open/screens/forgot_pass.dart';
 import 'package:mobile_app_open/screens/register.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
-import 'package:mobile_app_open/services/google_sign_in.dart';
 import 'package:mobile_app_open/utils/constants.dart';
+import 'package:mobile_app_open/utils/google_login_btn.dart';
+import 'package:mobile_app_open/utils/login_var.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/logo.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -34,44 +36,13 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Widget _buildLogo() {
-    return Container(
-      height: 100.0,
-      decoration: BoxDecoration(
-        image:
-            DecorationImage(image: AssetImage('assets/logos/open-unifeob.png')),
-      ),
-    );
-  }
-
   Widget _buildEmailForm() {
     return TextFormField(
       controller: email,
       keyboardType: TextInputType.emailAddress,
-      style: TextStyle(
-        color: kColorWhite,
-      ),
+      style: kTextStyleWhite,
       cursorColor: kColorWhite,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        prefixIcon: Icon(Icons.email, color: kColorWhite),
-        prefixIconColor: kColorWhite,
-        labelText: "Email",
-        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
-        hintText: "Digite seu email",
-        hintStyle: TextStyle(color: kColorWhite),
-      ),
+      decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe um email válido';
@@ -84,31 +55,10 @@ class _LoginState extends State<Login> {
   Widget _buildPasswordForm() {
     return TextFormField(
       controller: password,
-      style: TextStyle(
-        color: kColorWhite,
-      ),
+      style: kTextStyleWhite,
       obscureText: true,
       cursorColor: kColorWhite,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: kColorWhite, width: 1.0),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        prefixIcon: Icon(Icons.lock, color: kColorWhite),
-        prefixIconColor: kColorWhite,
-        labelText: "Senha",
-        labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
-        hintText: "Digite sua senha",
-        hintStyle: TextStyle(color: kColorWhite),
-      ),
+      decoration: inputDecoration(Icons.lock, 'Senha', 'Digite sua senha'),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe sua senha';
@@ -137,39 +87,39 @@ class _LoginState extends State<Login> {
         ),
         child: Text(
           'Esqueceu sua senha?',
-          style: kLabelStyle,
+          style: kTextLabelStyle,
         ),
       ),
     );
   }
 
-  Widget _buildRememberMeCheckBox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: kColorWhite),
-            child: Checkbox(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              value: _rememberMe,
-              checkColor: kColorBlue,
-              activeColor: kColorWhite,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            "Lembrar dados",
-            style: kLabelStyle,
-          )
-        ],
-      ),
-    );
-  }
+  // Widget _buildRememberMeCheckBox() {
+  //   return Container(
+  //     height: 20.0,
+  //     child: Row(
+  //       children: <Widget>[
+  //         Theme(
+  //           data: ThemeData(unselectedWidgetColor: kColorWhite),
+  //           child: Checkbox(
+  //             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  //             value: _rememberMe,
+  //             checkColor: kColorBlue,
+  //             activeColor: kColorWhite,
+  //             onChanged: (value) {
+  //               setState(() {
+  //                 _rememberMe = value;
+  //               });
+  //             },
+  //           ),
+  //         ),
+  //         Text(
+  //           "Lembrar dados",
+  //           style: kTextLabelStyle,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildEnterBtn() {
     return Container(
@@ -185,88 +135,9 @@ class _LoginState extends State<Login> {
           Icons.login,
           color: kColorBlue,
         ),
-        label: Text("ENTRAR",
-            style: TextStyle(
-                color: kColorBlue,
-                letterSpacing: 1.5,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'OpenSans')),
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all(5.0),
-          padding: MaterialStateProperty.all(EdgeInsets.all(15.0)),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0))),
-          backgroundColor: MaterialStateProperty.all(kColorYellow),
-        ),
+        label: Text("ENTRAR", style: kStyleTextButton),
+        style: kStyleButton,
       ),
-    );
-  }
-
-  Widget _buildEnterWith() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OU -',
-          style: TextStyle(color: kColorWhite, fontWeight: FontWeight.w500),
-        ),
-        SizedBox(
-          height: 10.0,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialBtn() {
-    return ElevatedButton.icon(
-      icon: Image.asset('assets/logos/google.png', height: 30.0),
-      style: ElevatedButton.styleFrom(
-        primary: kColorWhite,
-        onPrimary: kColorBlue,
-        minimumSize: Size(double.infinity, 50),
-      ),
-      onPressed: () {
-        final provider =
-            Provider.of<GoogleSignInProvider>(context, listen: false);
-        provider.googleLogin();
-      },
-      label: Text(
-        'Entrar com Google',
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignUp() {
-    return GestureDetector(
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Register()),
-        )
-      },
-      child: RichText(
-          text: TextSpan(children: [
-        TextSpan(
-          text: 'Não possui cadastro? ',
-          style: TextStyle(
-            color: kColorWhite,
-            fontSize: 18.0,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        TextSpan(
-          text: 'Cadastre-se',
-          style: TextStyle(
-            color: kColorYellow,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ])),
     );
   }
 
@@ -309,38 +180,29 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _buildLogo(),
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                    logoOpen(100.0),
+                    SizedBox(height: 20.0),
                     // _buildTitle(),
                     Form(
                       key: formKey,
                       child: Column(children: [
                         SizedBox(height: 30.0),
                         _buildEmailForm(),
-                        SizedBox(
-                          height: 20.0,
-                        ),
+                        SizedBox(height: 20.0),
                         _buildPasswordForm(),
                         SizedBox(height: 10.0),
                         // _buildPassword(),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            _buildRememberMeCheckBox(),
+                            // _buildRememberMeCheckBox(),
                             _buildForgetPassBtn(),
                           ],
                         ),
                         _buildEnterBtn(),
-                        _buildEnterWith(),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        _buildSocialBtn(),
-                        SizedBox(
-                          height: 20.0,
-                        ),
+                        alternativeEnterDivider(),
+                        SizedBox(height: 20.0),
+                        googleBtn(context),
                       ]),
                     ),
                   ],

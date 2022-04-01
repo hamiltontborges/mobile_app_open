@@ -3,7 +3,7 @@ import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mobile_app_open/services/auth_check.dart';
+import 'package:mobile_app_open/widgets/auth_check.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/services/google_sign_in.dart';
 import 'package:provider/provider.dart';
