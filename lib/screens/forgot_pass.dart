@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:email_validator/email_validator.dart';
+
 import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/logo.dart';
-import '../utils/login_var.dart';
+import 'package:mobile_app_open/utils/login_var.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -19,9 +21,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final email = TextEditingController();
 
   validateEmail(email) {
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
+    bool emailValid = EmailValidator.validate(email);
     return emailValid;
   }
 
@@ -41,7 +41,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Informe o email corretamente';
+          return 'Informe o email';
         } else if (!validateEmail(value)) {
           return 'Email inválido';
         }

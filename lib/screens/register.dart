@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:email_validator/email_validator.dart';
+
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/login_var.dart';
 import 'package:mobile_app_open/utils/logo.dart';
-import 'package:provider/provider.dart';
-
-import '../utils/google_login_btn.dart';
+import 'package:mobile_app_open/utils/google_login_btn.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -17,10 +18,12 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool? loading = false;
+  bool obscureText = true;
 
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
+  final confirmPassword = TextEditingController();
 
   register() async {
     setState(() => loading == true);
@@ -35,9 +38,7 @@ class _RegisterState extends State<Register> {
   }
 
   validateEmail(email) {
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
+    bool emailValid = EmailValidator.validate(email);
     return emailValid;
   }
 
@@ -47,10 +48,11 @@ class _RegisterState extends State<Register> {
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleWhite,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
+      decoration:
+          inputDecoration(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Informe o email corretamente';
+          return 'Informe o email';
         } else if (!validateEmail(value)) {
           return 'Email inválido';
         }
@@ -63,9 +65,10 @@ class _RegisterState extends State<Register> {
     return TextFormField(
       controller: password,
       style: kTextStyleWhite,
-      obscureText: true,
+      obscureText: obscureText,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(Icons.lock, 'Senha', 'Digite sua senha'),
+      decoration: inputDecoration(
+          Icons.lock, 'Senha', 'Digite sua senha'),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe sua senha';
@@ -79,12 +82,20 @@ class _RegisterState extends State<Register> {
 
   Widget _buildConfirmPasswordForm() {
     return TextFormField(
-      controller: password,
+      controller: confirmPassword,
       style: kTextStyleWhite,
-      obscureText: true,
+      obscureText: obscureText,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(
-          Icons.lock, 'Confirmar senha', 'Digite novamente sua senha'),
+      decoration: inputDecoration(Icons.lock,
+          'Confirmar senha', 'Digite novamente sua senha'),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Prrenchimento obrigatório';
+        } else if (confirmPassword.text != password.text) {
+          return 'As senhas não conferem';
+        }
+        return null;
+      },
     );
   }
 
@@ -98,7 +109,7 @@ class _RegisterState extends State<Register> {
             register();
           }
         },
-        icon: Icon(Icons.person_add,color: kColorBlue),
+        icon: Icon(Icons.person_add, color: kColorBlue),
         label: Text("CADASTRAR", style: kStyleTextButton),
         style: kStyleButton,
       ),

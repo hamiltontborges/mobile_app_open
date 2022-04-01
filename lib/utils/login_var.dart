@@ -56,13 +56,13 @@ final kStyleButton = ButtonStyle(
 // FUNCTIONS
 
 // inputDecoration -> TextFormField
-inputDecoration(icon, labelText, hintText) {
+inputDecoration(prefixIcon, labelText, hintText) {
   return InputDecoration(
     focusedBorder: kBorderWhite,
     enabledBorder: kBorderWhite,
     errorBorder: kBorderError,
     focusedErrorBorder: kBorderError,
-    prefixIcon: Icon(icon, color: kColorWhite),
+    prefixIcon: Icon(prefixIcon, color: kColorWhite),
     prefixIconColor: kColorWhite,
     labelText: labelText,
     labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
@@ -70,7 +70,6 @@ inputDecoration(icon, labelText, hintText) {
     hintStyle: TextStyle(color: kColorWhite),
   );
 }
-
 
 alternativeEnterDivider() {
   return Row(children: <Widget>[

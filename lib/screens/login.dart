@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:email_validator/email_validator.dart';
+
 import 'package:mobile_app_open/screens/forgot_pass.dart';
 import 'package:mobile_app_open/screens/register.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/google_login_btn.dart';
 import 'package:mobile_app_open/utils/login_var.dart';
-import 'package:provider/provider.dart';
-
-import '../utils/logo.dart';
+import 'package:mobile_app_open/utils/logo.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool? _rememberMe = false;
   bool? loading = false;
+  bool obscureText = true;
 
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
@@ -36,6 +38,11 @@ class _LoginState extends State<Login> {
     }
   }
 
+  validateEmail(email) {
+    bool emailValid = EmailValidator.validate(email);
+    return emailValid;
+  }
+
   Widget _buildEmailForm() {
     return TextFormField(
       controller: email,
@@ -45,7 +52,9 @@ class _LoginState extends State<Login> {
       decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Informe um email válido';
+          return 'Informe o email';
+        } else if (!validateEmail(value)) {
+          return 'Email inválido';
         }
         return null;
       },
@@ -149,7 +158,10 @@ class _LoginState extends State<Login> {
         title: Text('Login'),
         actions: <Widget>[
           TextButton.icon(
-            icon: Icon(Icons.person_add, color: kColorYellow,),
+              icon: Icon(
+                Icons.person_add,
+                color: kColorYellow,
+              ),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Register()));
