@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_app_open/utils/validators.dart';
@@ -16,99 +17,97 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   bool? loading = false;
+  final user = FirebaseAuth.instance.currentUser!;
 
   final formKey = GlobalKey<FormState>();
+  final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
 
-
-  register() async {
-    setState(() => loading == true);
-    try {
-      await context.read<AuthService>().registerUser(email.text, password.text);
-      Navigator.pop(context);
-    } on AuthException catch (e) {
-      setState(() => loading == false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
-    }
-  }
-
+  String dropdownValue = "";
 
   Widget _buildEmailForm() {
     return TextFormField(
+      enabled: false,
       controller: email,
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleBlue,
       cursorColor: kColorBlue,
-      decoration:
-          inputDecorationBlue(Icons.email, "Email", "Digite seu email"),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Informe o email';
-        } else if (!validateEmail(value)) {
-          return 'Email inválido';
-        }
-        return null;
-      },
+      decoration: inputDecorationBlue(Icons.email, "${user.email}"),
     );
   }
 
   Widget _buildName() {
     return TextFormField(
-      controller: email,
+      controller: name,
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleBlue,
       cursorColor: kColorBlue,
-      decoration:
-          inputDecorationBlue(Icons.email, "Nome", "Digite seu nome completo"),
+      decoration: inputDecorationBlue(Icons.person, "Nome completo",
+          hintText: "Digite seu nome completo"),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Informe seu nome';
+          return 'Informe seu nome completo';
         } else if (value.length < 6) {
-          return 'Seu nome deve ter no mínimo 8 dígitos';
+          return 'Seu nome deve ter no mínimo 10 caracteres';
         }
         return null;
       },
     );
   }
 
-  Widget _buildPasswordForm() {
+  Widget _buildCurso() {
     return TextFormField(
-      controller: password,
-      style: kTextStyleWhite,
-      obscureText: true,
-      cursorColor: kColorWhite,
-      decoration: inputDecorationBlue(
-          Icons.lock, 'Senha', 'Digite sua senha'),
+      controller: name,
+      keyboardType: TextInputType.emailAddress,
+      style: kTextStyleBlue,
+      cursorColor: kColorBlue,
+      decoration: inputDecorationBlue(Icons.person, "Nome completo",
+          hintText: "Digite seu nome completo"),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Informe sua senha';
+          return 'Informe o curso';
         } else if (value.length < 6) {
-          return 'Sua senha deve ter no mínimo 6 dígitos';
+          return 'Seu nome deve ter no mínimo 10 caracteres';
         }
         return null;
       },
     );
   }
 
-  Widget _buildConfirmPasswordForm() {
-    return TextFormField(
-      controller: confirmPassword,
-      style: kTextStyleWhite,
-      obscureText: true,
-      cursorColor: kColorWhite,
-      decoration: inputDecorationBlue(Icons.lock,
-          'Confirmar senha', 'Digite novamente sua senha'),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Preenchimento obrigatório';
-        } else if (confirmPassword.text != password.text) {
-          return 'As senhas não conferem';
-        }
-        return null;
+  Widget _buildDropCourses() {
+    return DropdownButtonFormField(
+      style: kTextStyleBlue,
+      
+      decoration: InputDecoration(
+        focusedBorder: kBorderBlue,
+        enabledBorder: kBorderBlue,
+        errorBorder: kBorderError,
+        focusedErrorBorder: kBorderError,
+        // prefixIcon: Icon(color: kColorBlue),
+        prefixIconColor: kColorBlue,
+        labelText: "Curso",
+        labelStyle: TextStyle(color: kColorBlue, fontWeight: FontWeight.bold),
+        hintText: "Selecione o curso",
+        hintStyle: TextStyle(color: kColorBlue),
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
       },
+      validator: (String? value) {
+        if (value!.isEmpty) {
+          return "can't empty";
+        } else {
+          return null;
+        }
+      },
+      items: ["Análise e Desenvolvimento de Sistemas", "Ciência da Computação"]
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem(value: value, child: Text(value));
+      }).toList(),
     );
   }
 
@@ -118,9 +117,7 @@ class _EditProfileState extends State<EditProfile> {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
-          if (formKey.currentState!.validate()) {
-            register();
-          }
+          if (formKey.currentState!.validate()) {}
         },
         icon: Icon(Icons.arrow_upward, color: kColorBlue),
         label: Text("Atualizar", style: kStyleTextButton),
@@ -156,18 +153,16 @@ class _EditProfileState extends State<EditProfile> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-          
                     Form(
                       key: formKey,
                       child: Column(children: [
                         SizedBox(height: 10.0),
-                        _buildName(),
-                        SizedBox(height: 20.0),
                         _buildEmailForm(),
                         SizedBox(height: 20.0),
-                        _buildPasswordForm(),
+                        _buildName(),
                         SizedBox(height: 20.0),
-                        _buildConfirmPasswordForm(),
+                        _buildDropCourses(),
+                        SizedBox(height: 20.0),
                         SizedBox(height: 10.0),
                         _buildAttBtn(),
                       ]),

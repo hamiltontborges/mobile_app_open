@@ -27,7 +27,6 @@ final kTextStyleWhiteBold = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-
 // Text Blue Bold
 final kTextStyleBlueBold = TextStyle(
   color: kColorBlue,
@@ -84,8 +83,9 @@ inputDecorationWhite(prefixIcon, labelText, hintText) {
   );
 }
 
-inputDecorationBlue(prefixIcon, labelText, hintText) {
+inputDecorationBlue(prefixIcon, labelText, {hintText}) {
   return InputDecoration(
+    disabledBorder: kBorderWhite,
     focusedBorder: kBorderBlue,
     enabledBorder: kBorderBlue,
     errorBorder: kBorderError,
@@ -100,10 +100,24 @@ inputDecorationBlue(prefixIcon, labelText, hintText) {
 }
 
 alternativeEnterDivider() {
-  return Row(children: <Widget>[
-    Expanded(child: Divider(thickness: 1, endIndent: 10,color: kColorWhite,)),
-    Text("OU", style: kTextStyleWhiteBold,),
-    Expanded(child: Divider(thickness: 1, indent: 10,color: kColorWhite,)),
-  ],
+  return Row(
+    children: <Widget>[
+      Expanded(
+          child: Divider(
+        thickness: 1,
+        endIndent: 10,
+        color: kColorWhite,
+      )),
+      Text(
+        "OU",
+        style: kTextStyleWhiteBold,
+      ),
+      Expanded(
+          child: Divider(
+        thickness: 1,
+        indent: 10,
+        color: kColorWhite,
+      )),
+    ],
   );
 }

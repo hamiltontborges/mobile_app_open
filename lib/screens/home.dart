@@ -18,13 +18,16 @@ class _HomeState extends State<Home> {
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    NewsVideos(),
     Text(
-      '',
+      'Início',
       style: optionStyle,
     ),
     Text(
-      'Index 2: Playlists',
+      'Favoritos',
+      style: optionStyle,
+    ),
+    Text(
+      'Playlists',
       style: optionStyle,
     ),
   ];
