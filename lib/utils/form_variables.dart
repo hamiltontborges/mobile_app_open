@@ -27,9 +27,22 @@ final kTextStyleWhiteBold = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+
+// Text Blue Bold
+final kTextStyleBlueBold = TextStyle(
+  color: kColorBlue,
+  fontFamily: 'OpenSans',
+  fontWeight: FontWeight.bold,
+);
+
 //Input Border White
 final kBorderWhite = OutlineInputBorder(
   borderSide: BorderSide(color: kColorWhite),
+);
+
+//Input Border Blue
+final kBorderBlue = OutlineInputBorder(
+  borderSide: BorderSide(color: kColorBlue),
 );
 
 // Input Border Red
@@ -56,7 +69,7 @@ final kStyleButton = ButtonStyle(
 // FUNCTIONS
 
 // inputDecoration -> TextFormField
-inputDecoration(prefixIcon, labelText, hintText) {
+inputDecorationWhite(prefixIcon, labelText, hintText) {
   return InputDecoration(
     focusedBorder: kBorderWhite,
     enabledBorder: kBorderWhite,
@@ -68,6 +81,21 @@ inputDecoration(prefixIcon, labelText, hintText) {
     labelStyle: TextStyle(color: kColorWhite, fontWeight: FontWeight.bold),
     hintText: hintText,
     hintStyle: TextStyle(color: kColorWhite),
+  );
+}
+
+inputDecorationBlue(prefixIcon, labelText, hintText) {
+  return InputDecoration(
+    focusedBorder: kBorderBlue,
+    enabledBorder: kBorderBlue,
+    errorBorder: kBorderError,
+    focusedErrorBorder: kBorderError,
+    prefixIcon: Icon(prefixIcon, color: kColorBlue),
+    prefixIconColor: kColorBlue,
+    labelText: labelText,
+    labelStyle: TextStyle(color: kColorBlue, fontWeight: FontWeight.bold),
+    hintText: hintText,
+    hintStyle: TextStyle(color: kColorBlue),
   );
 }
 

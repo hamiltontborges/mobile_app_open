@@ -8,6 +8,7 @@ import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/services/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +17,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => AuthService()),
-      ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
-    ],
-    child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+      ],
+      child: MyApp(),
     ),
   );
 }

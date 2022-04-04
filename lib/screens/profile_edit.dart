@@ -6,24 +6,22 @@ import 'package:provider/provider.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/form_variables.dart';
-import 'package:mobile_app_open/utils/logo.dart';
-import 'package:mobile_app_open/utils/google_login_btn.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class EditProfile extends StatefulWidget {
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _RegisterState extends State<Register> {
+class _EditProfileState extends State<EditProfile> {
   bool? loading = false;
-  bool obscureText = true;
 
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
+
 
   register() async {
     setState(() => loading == true);
@@ -37,14 +35,15 @@ class _RegisterState extends State<Register> {
     }
   }
 
+
   Widget _buildEmailForm() {
     return TextFormField(
       controller: email,
       keyboardType: TextInputType.emailAddress,
-      style: kTextStyleWhite,
-      cursorColor: kColorWhite,
+      style: kTextStyleBlue,
+      cursorColor: kColorBlue,
       decoration:
-          inputDecorationWhite(Icons.email, "Email", "Digite seu email"),
+          inputDecorationBlue(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe o email';
@@ -56,13 +55,33 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  Widget _buildName() {
+    return TextFormField(
+      controller: email,
+      keyboardType: TextInputType.emailAddress,
+      style: kTextStyleBlue,
+      cursorColor: kColorBlue,
+      decoration:
+          inputDecorationBlue(Icons.email, "Nome", "Digite seu nome completo"),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Informe seu nome';
+        } else if (value.length < 6) {
+          return 'Seu nome deve ter no mínimo 8 dígitos';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildPasswordForm() {
     return TextFormField(
       controller: password,
       style: kTextStyleWhite,
-      obscureText: obscureText,
+      obscureText: true,
       cursorColor: kColorWhite,
-      decoration: inputDecorationWhite(Icons.lock, 'Senha', 'Digite sua senha'),
+      decoration: inputDecorationBlue(
+          Icons.lock, 'Senha', 'Digite sua senha'),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe sua senha';
@@ -78,10 +97,10 @@ class _RegisterState extends State<Register> {
     return TextFormField(
       controller: confirmPassword,
       style: kTextStyleWhite,
-      obscureText: obscureText,
+      obscureText: true,
       cursorColor: kColorWhite,
-      decoration: inputDecorationWhite(
-          Icons.lock, 'Confirmar senha', 'Digite novamente sua senha'),
+      decoration: inputDecorationBlue(Icons.lock,
+          'Confirmar senha', 'Digite novamente sua senha'),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Preenchimento obrigatório';
@@ -93,7 +112,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _buildRegisterBtn() {
+  Widget _buildAttBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
@@ -103,8 +122,8 @@ class _RegisterState extends State<Register> {
             register();
           }
         },
-        icon: Icon(Icons.person_add, color: kColorBlue),
-        label: Text("CADASTRAR", style: kStyleTextButton),
+        icon: Icon(Icons.arrow_upward, color: kColorBlue),
+        label: Text("Atualizar", style: kStyleTextButton),
         style: kStyleButton,
       ),
     );
@@ -115,21 +134,7 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kColorDarkBlue,
-        title: Text('Cadastro'),
-        actions: <Widget>[
-          TextButton.icon(
-              icon: Icon(
-                Icons.login,
-                color: kColorYellow,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              label: Text(
-                'Entrar',
-                style: TextStyle(color: kColorYellow, fontSize: 16),
-              )),
-        ],
+        title: Text('Meus dados'),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -140,7 +145,7 @@ class _RegisterState extends State<Register> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: kColorBlue,
+                color: kColorWhite,
               ),
             ),
             Container(
@@ -151,24 +156,20 @@ class _RegisterState extends State<Register> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    logoOpen(100.0),
+          
                     Form(
                       key: formKey,
                       child: Column(children: [
-                        SizedBox(height: 30.0),
+                        SizedBox(height: 10.0),
+                        _buildName(),
+                        SizedBox(height: 20.0),
                         _buildEmailForm(),
                         SizedBox(height: 20.0),
                         _buildPasswordForm(),
                         SizedBox(height: 20.0),
                         _buildConfirmPasswordForm(),
                         SizedBox(height: 10.0),
-                        _buildRegisterBtn(),
-                        alternativeEnterDivider(),
-                        SizedBox(height: 20.0),
-                        googleBtn(context),
+                        _buildAttBtn(),
                       ]),
                     ),
                   ],

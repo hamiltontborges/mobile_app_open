@@ -1,26 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_app_open/screens/news_videos.dart';
+import 'package:mobile_app_open/screens/profile_edit.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
+import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
+
+  static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
+    NewsVideos(),
     Text(
-      'Index 0: Início',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Favoritos',
+      '',
       style: optionStyle,
     ),
     Text(
@@ -37,6 +37,40 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+    var userName = checkEmptyValue(user.displayName);
+    var userPhoto = checkEmptyValue(user.photoURL);
+    var userEmail = checkEmptyValue(user.email);
+    var firstLetter =
+        !userEmail.isEmpty ? userEmail.substring(0, 1).toUpperCase() : '';
+
+    _buildUserDrawerHeader() {
+      if (user.displayName == null && user.photoURL == null) {
+        return UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: kColorBlue,
+            ),
+            accountEmail: Text("${user.email}"),
+            accountName: null,
+            currentAccountPicture: CircleAvatar(
+                backgroundColor: kColorYellow,
+                child: Text(
+                  firstLetter,
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: kColorBlue),
+                )));
+      } else {
+        return UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: kColorBlue,
+            ),
+            accountEmail: Text("${userEmail}"),
+            accountName: Text('${userName}'),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(userPhoto),
+            ));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
@@ -61,23 +95,13 @@ class _HomeState extends State<Home> {
                   const SnackBar(content: Text('This is a snackbar')));
             },
           ),
-          
         ],
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: kColorBlue,
-              ),
-              accountEmail: Text("email@email.com"),
-              accountName: Text('Usuário Logado'),
-              currentAccountPicture: CircleAvatar(
-                child: Text('U', style: TextStyle(fontSize: 26.0),)
-              ),
-            ),
+            _buildUserDrawerHeader(),
             ListTile(
               leading: Icon(Icons.dashboard),
               title: Text('Meu canal'),
@@ -89,6 +113,12 @@ class _HomeState extends State<Home> {
               onTap: () => {},
             ),
             ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Meu perfil'),
+              onTap: () => {Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditProfile())),},
+            ),
+            ListTile(
               leading: Icon(Icons.email),
               title: Text('Mensagens'),
               onTap: () => {},
@@ -98,7 +128,10 @@ class _HomeState extends State<Home> {
               title: Text('Estatíticas'),
               onTap: () => {},
             ),
-            Divider(color: Color.fromARGB(31, 0, 0, 0), thickness: 1,),
+            Divider(
+              color: Color.fromARGB(31, 0, 0, 0),
+              thickness: 1,
+            ),
             ListTile(
               leading: Icon(Icons.help),
               title: Text('Ajuda e Feedback'),

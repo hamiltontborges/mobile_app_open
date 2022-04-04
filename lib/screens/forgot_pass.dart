@@ -7,7 +7,7 @@ import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/logo.dart';
-import 'package:mobile_app_open/utils/login_var.dart';
+import 'package:mobile_app_open/utils/form_variables.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -38,7 +38,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleWhite,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
+      decoration:
+          inputDecorationWhite(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe o email';

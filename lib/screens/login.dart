@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -8,7 +9,7 @@ import 'package:mobile_app_open/screens/register.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/google_login_btn.dart';
-import 'package:mobile_app_open/utils/login_var.dart';
+import 'package:mobile_app_open/utils/form_variables.dart';
 import 'package:mobile_app_open/utils/logo.dart';
 
 class Login extends StatefulWidget {
@@ -38,18 +39,14 @@ class _LoginState extends State<Login> {
     }
   }
 
-  validateEmail(email) {
-    bool emailValid = EmailValidator.validate(email);
-    return emailValid;
-  }
-
   Widget _buildEmailForm() {
     return TextFormField(
       controller: email,
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleWhite,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(Icons.email, "Email", "Digite seu email"),
+      decoration:
+          inputDecorationWhite(Icons.email, "Email", "Digite seu email"),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe o email';
@@ -67,7 +64,7 @@ class _LoginState extends State<Login> {
       style: kTextStyleWhite,
       obscureText: true,
       cursorColor: kColorWhite,
-      decoration: inputDecoration(Icons.lock, 'Senha', 'Digite sua senha'),
+      decoration: inputDecorationWhite(Icons.lock, 'Senha', 'Digite sua senha'),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Informe sua senha';

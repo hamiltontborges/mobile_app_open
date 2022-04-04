@@ -27,9 +27,7 @@ class _AuthCheckState extends State<AuthCheck> {
 
   loading() {
     return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator()
-        ),
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }
