@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/models/user.dart';
 import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 

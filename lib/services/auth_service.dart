@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mobile_app_open/models/user.dart';
 
 class AuthException implements Exception {
   String message;
@@ -34,6 +35,7 @@ class AuthService extends ChangeNotifier {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       _getUser();
+      // Users().addUser(email, usuario!.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw AuthException('A senha é muito fraca');

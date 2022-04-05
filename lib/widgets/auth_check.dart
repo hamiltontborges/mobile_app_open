@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app_open/models/user.dart';
 import 'package:mobile_app_open/screens/home.dart';
 import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
@@ -21,6 +22,7 @@ class _AuthCheckState extends State<AuthCheck> {
     } else if (auth.usuario == null) {
       return Login();
     } else {
+      Users().addUser(auth.usuario?.email, auth.usuario?.uid);
       return Home();
     }
   }
