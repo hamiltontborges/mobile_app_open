@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_app_open/utils/validators.dart';
-import 'package:provider/provider.dart';
+import 'package:mobile_app_open/models/user.dart';
+import 'package:mobile_app_open/utils/courses.dart';
 
-import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/form_variables.dart';
 
@@ -38,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildName() {
+  Widget _buildName({name}) {
     return TextFormField(
       controller: name,
       keyboardType: TextInputType.emailAddress,
@@ -57,29 +57,9 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildCurso() {
-    return TextFormField(
-      controller: name,
-      keyboardType: TextInputType.emailAddress,
-      style: kTextStyleBlue,
-      cursorColor: kColorBlue,
-      decoration: inputDecorationBlue(Icons.person, "Nome completo",
-          hintText: "Digite seu nome completo"),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Informe o curso';
-        } else if (value.length < 6) {
-          return 'Seu nome deve ter no mínimo 10 caracteres';
-        }
-        return null;
-      },
-    );
-  }
-
   Widget _buildDropCourses() {
     return DropdownButtonFormField(
       style: kTextStyleBlue,
-      
       decoration: InputDecoration(
         focusedBorder: kBorderBlue,
         enabledBorder: kBorderBlue,
@@ -104,8 +84,7 @@ class _EditProfileState extends State<EditProfile> {
           return null;
         }
       },
-      items: ["Análise e Desenvolvimento de Sistemas", "Ciência da Computação"]
-          .map<DropdownMenuItem<String>>((String value) {
+      items: courses.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem(value: value, child: Text(value));
       }).toList(),
     );
@@ -158,8 +137,6 @@ class _EditProfileState extends State<EditProfile> {
                       child: Column(children: [
                         SizedBox(height: 10.0),
                         _buildEmailForm(),
-                        SizedBox(height: 20.0),
-                        _buildName(),
                         SizedBox(height: 20.0),
                         _buildDropCourses(),
                         SizedBox(height: 20.0),

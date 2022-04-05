@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
@@ -11,20 +12,17 @@ class Users {
 
   Future<void> addUser(email, id) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final DateTime date_register = DateTime.now();
 
     return users
         .doc(id)
-        .set({'email': email})
+        .set({'email': email, 'date_register': date_register})
         .then((value) => print("Usuário adicionado"))
         .catchError((error) => print("Erro ao adicionar usuário: $error"));
-
-    }
   }
 
-  // Future<void> getUser({email, id, fullname}) {
+}
 
-
-  // }
 
 
 
