@@ -83,7 +83,7 @@ inputDecorationWhite(prefixIcon, labelText, hintText) {
   );
 }
 
-inputDecorationBlue(prefixIcon, labelText, {hintText}) {
+inputDecorationBlue(labelText, {hintText, prefixIcon}) {
   return InputDecoration(
     disabledBorder: kBorderWhite,
     focusedBorder: kBorderBlue,

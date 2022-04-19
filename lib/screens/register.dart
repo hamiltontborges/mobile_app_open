@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_app_open/models/user.dart';
+import 'package:mobile_app_open/utils/snackbar.dart';
 import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 
@@ -30,11 +31,11 @@ class _RegisterState extends State<Register> {
     setState(() => loading == true);
     try {
       await context.read<AuthService>().registerUser(email.text, password.text);
+      snackBar(context, "Usuário cadastrado com sucesso!", color: Colors.green);
       Navigator.pop(context);
     } on AuthException catch (e) {
       setState(() => loading == false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      snackBar(context, e.message, color: Colors.red);
     }
   }
 

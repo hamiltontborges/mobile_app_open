@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:mobile_app_open/utils/snackbar.dart';
+import 'package:provider/provider.dart';
 
-import 'package:mobile_app_open/screens/login.dart';
 import 'package:mobile_app_open/services/auth_service.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/logo.dart';
 import 'package:mobile_app_open/utils/form_variables.dart';
+import 'package:mobile_app_open/utils/validators.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -20,16 +21,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
 
-  validateEmail(email) {
-    bool emailValid = EmailValidator.validate(email);
-    return emailValid;
-  }
-
   @override
   void dispose() {
     email.dispose();
 
     super.dispose();
+  }
+
+  resetPass() async {
+    try {
+      await context.read<AuthService>().resetPassword(email.text);
+      snackBar(context, "Email de recuperação de senha enviado.",
+          color: Colors.green);
+      Navigator.of(context).pop();
+    } on AuthException catch (e) {
+      snackBar(context, e.message, color: Colors.red);
+
+    }
   }
 
   Widget _buildEmailForm() {
@@ -57,7 +65,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
-          resetPassword();
+          if (formKey.currentState!.validate()) {
+            resetPass();
+          }
         },
         icon: Icon(Icons.send_outlined, color: kColorBlue),
         label: Text("Recuperar senha", style: kStyleTextButton),
@@ -126,25 +136,5 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
-  }
-
-  Future resetPassword() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ));
-    try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: email.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Email de recuperação de senha enviado.")));
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-    } on AuthException catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
-      Navigator.of(context).pop();
-    }
   }
 }

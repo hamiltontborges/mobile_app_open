@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app_open/utils/snackbar.dart';
 import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
-import 'package:email_validator/email_validator.dart';
 
 import 'package:mobile_app_open/screens/forgot_pass.dart';
 import 'package:mobile_app_open/screens/register.dart';
@@ -32,10 +32,10 @@ class _LoginState extends State<Login> {
     setState(() => loading == true);
     try {
       await context.read<AuthService>().loginUser(email.text, password.text);
+      snackBar(context, "Bem-vindo(a) ${email.text}!", color: Colors.green);
     } on AuthException catch (e) {
       setState(() => loading == false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      snackBar(context, e.message, color: Colors.red);
     }
   }
 

@@ -1,9 +1,10 @@
 const courses = [
+  'Não Estudo',
   'Administração',
   'Análise e Desenvolvimento de Sistemas',
   'Arquitetura',
   'Biomedicina',
-  'Ciências Biológica',
+  'Ciências Biológicas',
   'Ciências Contábeis',
   'Ciências Econômicas',
   'Ciência da Computação',
@@ -20,4 +21,5 @@ const courses = [
   'Nutrição',
   'Pedagogia',
   'Psicologia',
+  'Outro',
 ];

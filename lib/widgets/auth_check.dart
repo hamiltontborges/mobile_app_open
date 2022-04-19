@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app_open/models/user.dart';
 import 'package:mobile_app_open/screens/home.dart';
@@ -22,7 +23,18 @@ class _AuthCheckState extends State<AuthCheck> {
     } else if (auth.usuario == null) {
       return Login();
     } else {
-      Users().addUser(auth.usuario?.email, auth.usuario?.uid);
+      FirebaseFirestore.instance
+    .collection('users')
+    .doc(auth.usuario?.uid)
+    .get()
+    .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('Usuário já existe');
+        Users().updateLoginUser(auth.usuario?.uid, DateTime.now());
+      } else {
+        Users().addUser(auth.usuario?.uid, auth.usuario?.email);
+      }
+    });
       return Home();
     }
   }

@@ -1,65 +1,60 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Users {
-  final String? email;
   final String? id;
+  final String? email;
+  final DateTime? birthDate;
+  final String? fullName;
+  final DateTime? lastLogin = DateTime.now();
+  final DateTime? dateUpdate;
+  final DateTime? dateRegister = DateTime.now();
 
   Users({
     this.email,
     this.id,
+    this.fullName,
+    this.birthDate,
+    this.dateUpdate,
   });
 
-  Future<void> addUser(email, id) {
+  Future<void> addUser(id, email) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    final DateTime date_register = DateTime.now();
-
     return users
         .doc(id)
-        .set({'email': email, 'date_register': date_register})
+        .set({
+          'email': email,
+          'full_name': fullName,
+          'date_register': dateRegister,
+        })
         .then((value) => print("Usuário adicionado"))
         .catchError((error) => print("Erro ao adicionar usuário: $error"));
   }
 
+  Future<void> updateLoginUser(id, lastLogin) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    return users
+        .doc(id)
+        .update({
+          'last_login': lastLogin,
+        })
+        .then((value) => print("Data de login atualizada"))
+        .catchError(
+            (error) => print("Erro ao atualizar data de login: $error"));
+  }
+
+  Future<void> updateUser(id, fullName, birthDate, dateUpdate, course) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    return users
+        .doc(id)
+        .update({
+          'full_name': fullName,
+          'birth_date': birthDate,
+          'date_update': dateUpdate,
+          'course': course,
+        })
+        .then((value) => print("Usuário atualizado"))
+        .catchError((error) => print("Erro ao atualizar usuário: $error"));
+  }
 }
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-
-// // Import the firebase_core and cloud_firestore plugin
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-// class AddUser extends StatelessWidget {
-//   final String email;
-
-//   AddUser(
-//     this.email,
-//   );
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Create a CollectionReference called users that references the firestore collection
-//     CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-//     Future<void> addUser() {
-//       // Call the user's CollectionReference to add a new user
-//       return users
-//           .add({'email': email})
-//           .then((value) => print("Usuário adicionado"))
-//           .catchError((error) => print("Erro ao adicionar usuário: $error"));
-//     }
-
-//     return TextButton(
-//       onPressed: addUser,
-//       child: Text(
-//         "Add User",
-//       ),
-//     );
-//   }
-// }
-

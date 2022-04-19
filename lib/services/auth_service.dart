@@ -34,6 +34,7 @@ class AuthService extends ChangeNotifier {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      usuario?.sendEmailVerification();
       _getUser();
       // Users().addUser(email, usuario!.uid);
     } on FirebaseAuthException catch (e) {
@@ -52,6 +53,17 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         throw AuthException('Usuário ou senha incorretos.');
+      }
+    }
+  }
+
+  resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim());
+      _getUser();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw AuthException('Usuário não encontrado.');
       }
     }
   }
