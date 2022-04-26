@@ -20,8 +20,9 @@ class FireStoreService {
         .catchError((error) => print("Erro ao atualizar usuário: $error"));
   }
 
-    Future<void> updateLoginUser(String id, Usuario usuario) {
-    return _db.collection('users')
+  Future<void> updateLoginUser(String id, Usuario usuario) {
+    return _db
+        .collection('users')
         .doc(id)
         .update({
           'lastLogin': usuario.lastLogin,
