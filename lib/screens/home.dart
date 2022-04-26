@@ -7,6 +7,8 @@ import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 
+import '../services/google_sign_in.dart';
+
 class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
@@ -18,10 +20,8 @@ class _HomeState extends State<Home> {
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Início',
-      style: optionStyle,
-    ),
+      NewsVideos()
+    ,
     Text(
       'Favoritos',
       style: optionStyle,
@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Sair'),
-              onTap: () => {context.read<AuthService>().logout()},
+              onTap: () => {context.read<AuthService>().logout(), context.read<GoogleSignInProvider>().logout()},
             ),
           ],
         ),
@@ -162,6 +162,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.house),
             label: 'Início',
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),

@@ -3,12 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_app_open/models/user.dart';
+import 'package:mobile_app_open/providers/user_provider.dart';
 import 'package:mobile_app_open/utils/courses.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/form_variables.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mobile_app_open/utils/snackbar.dart';
+import 'package:provider/provider.dart';
 
 // class GetUserName extends StatelessWidget {
 //   final String documentId;
@@ -44,27 +47,48 @@ import 'package:intl/date_symbol_data_local.dart';
 // }
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  final Usuario? usuario;
+
+  EditProfile({this.usuario});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final formKey = GlobalKey<FormState>();
+  final fullnameController = TextEditingController();
+  final birthController = TextEditingController();
+  final courseController = TextEditingController();
+  String dropdownValue = '';
+
+
   bool? loading = false;
   final user = FirebaseAuth.instance.currentUser!;
-
-  final formKey = GlobalKey<FormState>();
-  final name = TextEditingController();
-  final birthDate = TextEditingController();
   final documentId = FirebaseAuth.instance.currentUser!.uid;
   final fullName = FirebaseAuth.instance.currentUser!.displayName;
 
-  String dropdownValue = '';
+  @override
+  void dispose() {
+    fullnameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    final usuarioProvider =
+        Provider.of<UsuarioProvider>(context, listen: false);
+    fullnameController.text = widget.usuario?.fullName ?? '';
+    birthController.text = widget.usuario?.birthDate.toString() ?? '';
+    dropdownValue = widget.usuario?.course ?? '';
+
+    super.initState();
+  }
+
 
   Widget _buildNameForm({fullname}) {
     return TextFormField(
-      controller: name,
+      controller: fullnameController,
       keyboardType: TextInputType.emailAddress,
       style: kTextStyleBlue,
       cursorColor: kColorBlue,
@@ -91,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
             initialDate: currentValue ?? DateTime.now(),
             lastDate: DateTime.now());
       },
-      controller: birthDate,
+      controller: birthController,
       style: kTextStyleBlue,
       decoration: InputDecoration(
         focusedBorder: kBorderBlue,
@@ -131,20 +155,19 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildAttBtn() {
+  Widget _buildAttBtn(id) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
           if (formKey.currentState!.validate()) {
-            Users().updateUser(user.uid, name.text, birthDate.text,
-                DateTime.now(), dropdownValue);
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Usuário atualizado com sucesso'),
-              backgroundColor: Color.fromARGB(255, 57, 192, 61),
-            ));
+            // Users().updateUser(user.uid, name.text, birthDate.text,
+            //     DateTime.now(), dropdownValue);
+            // Navigator.pop(context);
+
+            snackBar(context, 'Usuário atualizado com sucesso',
+                color: Colors.green);
           }
         },
         icon: Icon(Icons.arrow_upward, color: kColorBlue),
@@ -156,17 +179,16 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget _buildForm(context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return Text("Alguma coisa deu errada");
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text("Document does not exist");
+          return Text("Documento não existe.");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -191,6 +213,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UsuarioProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kColorDarkBlue,
@@ -220,7 +243,7 @@ class _EditProfileState extends State<EditProfile> {
                       SizedBox(height: 10.0),
                       _buildForm(user.uid),
                       _buildDropCourses(),
-                      _buildAttBtn(),
+                      _buildAttBtn(user.uid),
                     ]),
                   ),
                 ],
