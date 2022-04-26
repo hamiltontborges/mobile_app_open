@@ -62,7 +62,6 @@ class _EditProfileState extends State<EditProfile> {
   final courseController = TextEditingController();
   String dropdownValue = '';
 
-
   bool? loading = false;
   final user = FirebaseAuth.instance.currentUser!;
   final documentId = FirebaseAuth.instance.currentUser!.uid;
@@ -84,7 +83,6 @@ class _EditProfileState extends State<EditProfile> {
 
     super.initState();
   }
-
 
   Widget _buildNameForm({fullname}) {
     return TextFormField(
@@ -156,15 +154,18 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildAttBtn(id) {
+    final usuarioProvider =
+        Provider.of<UsuarioProvider>(context, listen: false);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
           if (formKey.currentState!.validate()) {
+            // usuarioProvider.attUser(user.uid);
             // Users().updateUser(user.uid, name.text, birthDate.text,
             //     DateTime.now(), dropdownValue);
-            // Navigator.pop(context);
+            Navigator.pop(context);
 
             snackBar(context, 'Usuário atualizado com sucesso',
                 color: Colors.green);
