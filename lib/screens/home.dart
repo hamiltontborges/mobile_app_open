@@ -20,8 +20,12 @@ class _HomeState extends State<Home> {
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
+<<<<<<< HEAD
       NewsVideos()
     ,
+=======
+    NewsVideos(),
+>>>>>>> master
     Text(
       'Favoritos',
       style: optionStyle,
@@ -59,7 +63,10 @@ class _HomeState extends State<Home> {
                 backgroundColor: kColorYellow,
                 child: Text(
                   firstLetter,
-                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: kColorBlue),
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: kColorBlue),
                 )));
       } else {
         return UserAccountsDrawerHeader(
@@ -118,8 +125,10 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Meu perfil'),
-              onTap: () => {Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EditProfile())),},
+              onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditProfile())),
+              },
             ),
             ListTile(
               leading: Icon(Icons.email),
@@ -148,7 +157,14 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Sair'),
+<<<<<<< HEAD
               onTap: () => {context.read<AuthService>().logout(), context.read<GoogleSignInProvider>().logout()},
+=======
+              onTap: () => {
+                context.read<AuthService>().logout(),
+                // context.read<GoogleSignInProvider>().logout()
+              },
+>>>>>>> master
             ),
           ],
         ),
