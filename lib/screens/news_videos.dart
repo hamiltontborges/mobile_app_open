@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app_open/models/channel_youtube.dart';
 import 'package:mobile_app_open/models/video_youtube.dart';
 import 'package:mobile_app_open/screens/video.dart';
-import 'package:mobile_app_open/services/api_youyube_services.dart';
+import 'package:mobile_app_open/services/api_youtube_services.dart';
 
 class NewsVideos extends StatefulWidget {
   @override
@@ -12,6 +12,7 @@ class NewsVideos extends StatefulWidget {
 class _NewsVideosState extends State<NewsVideos> {
   late Channel _channel;
   bool _isLoading = false;
+  bool _isCatching = true;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _NewsVideosState extends State<NewsVideos> {
         .fetchChannel(channelId: 'UC3VY_JONOUm20f2R-Rf7wxg');
     setState(() {
       _channel = channel;
+      _isCatching = false;
     });
   }
 
@@ -139,7 +141,7 @@ class _NewsVideosState extends State<NewsVideos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _channel != null
+      body: _isCatching == false
           ? NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollDetails) {
                 if (!_isLoading &&

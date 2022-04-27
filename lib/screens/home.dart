@@ -7,6 +7,8 @@ import 'package:mobile_app_open/utils/constants.dart';
 import 'package:mobile_app_open/utils/validators.dart';
 import 'package:provider/provider.dart';
 
+import '../services/google_sign_in.dart';
+
 class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
@@ -18,10 +20,7 @@ class _HomeState extends State<Home> {
   static TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Início',
-      style: optionStyle,
-    ),
+    NewsVideos(),
     Text(
       'Favoritos',
       style: optionStyle,
@@ -59,7 +58,10 @@ class _HomeState extends State<Home> {
                 backgroundColor: kColorYellow,
                 child: Text(
                   firstLetter,
-                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: kColorBlue),
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: kColorBlue),
                 )));
       } else {
         return UserAccountsDrawerHeader(
@@ -118,8 +120,10 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Meu perfil'),
-              onTap: () => {Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EditProfile())),},
+              onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditProfile())),
+              },
             ),
             ListTile(
               leading: Icon(Icons.email),
@@ -148,7 +152,10 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Sair'),
-              onTap: () => {context.read<AuthService>().logout()},
+              onTap: () => {
+                context.read<AuthService>().logout(),
+                // context.read<GoogleSignInProvider>().logout()
+              },
             ),
           ],
         ),
